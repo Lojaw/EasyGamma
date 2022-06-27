@@ -3,6 +3,7 @@ import java.util.Properties;
 import java.util.Scanner;
 
 public class EasyGamma {
+
     private final String _path;
 
     public EasyGamma(String minecraftPath) {
@@ -12,27 +13,35 @@ public class EasyGamma {
 
     public static void main(String[] args) {
         EasyGamma easyGamma = new EasyGamma("\\.minecraft\\options.txt");
-        System.out.println("Please enter the desired gamma value: ");
 
-        Scanner scanner = new Scanner(System.in);
-        String gammaValueString = scanner.next();
+        File optionsFile = new File(easyGamma._path);
 
-        try {
-            int gammaValueInt = Integer.parseInt(gammaValueString);
+        if (!optionsFile.getAbsoluteFile().isFile()) {
+            System.out.println("The options.txt file does not exists.");
 
-            if(gammaValueInt >= 0 && gammaValueInt <= 20) {
+        } else {
+            System.out.println("Please enter the desired gamma value: ");
 
-                easyGamma.readAndWriteProperty("gamma", gammaValueInt + ".0");
-                easyGamma.replaceEqualSignByColon();
-                System.out.println("The gamma value was now set to " + gammaValueInt + ".0");
+            Scanner scanner = new Scanner(System.in);
+            String gammaValueString = scanner.next();
 
-            } else
-                System.out.println("Please enter a number between 0 and 10");
+            try {
+                int gammaValueInt = Integer.parseInt(gammaValueString);
 
-        } catch (NumberFormatException e) {
-            System.out.println("Please enter a number");
+                if(gammaValueInt >= 0 && gammaValueInt <= 20) {
+
+                    easyGamma.readAndWriteProperty("gamma", gammaValueInt + ".0");
+                    easyGamma.replaceEqualSignByColon();
+                    System.out.println("The gamma value was now set to " + gammaValueInt + ".0");
+
+                } else
+                    System.out.println("Please enter a number between 0 and 20");
+
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter an Integer");
+            }
+            scanner.close();
         }
-        scanner.close();
     }
 
     private void readAndWriteProperty(String name, String value) {
